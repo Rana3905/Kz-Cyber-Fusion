@@ -1,0 +1,35 @@
+{
+  "domains": [
+    "kaspi-bonus.kz",
+    "halyk-promo.com",
+    "kaspi-win.ru",
+    "halyk-reward.net",
+    "free-kaspi.kz",
+    "kaspi-lucky.com",
+    "halyk-gift.ru",
+    "epay-kaspi.net",
+    "kaspigold.ru",
+    "halykreward.kz"
+  ],
+  "url_patterns": [
+    "bonus",
+    "promo",
+    "win",
+    "lucky",
+    "free",
+    "gift",
+    "reward",
+    "prize",
+    "claim",
+    "verify-account",
+    "confirm-identity"
+  ],
+  "suspicious_tlds": [
+    ".ru",
+    ".net",
+    ".xyz",
+    ".top",
+    ".click",
+    ".pw"
+  ]
+}

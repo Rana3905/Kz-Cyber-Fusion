@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background-color: #0A0E1A;
+    color: #E5E7EB;
+    margin: 0;
+    padding: 0;
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0A0E1A;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #1E2D4D;
+    border-radius: 2px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #2A3F6D;
+  }
+}
+
+@layer utilities {
+  .text-cyber-green { color: #00FF88; }
+  .text-cyber-critical { color: #FF4444; }
+  .text-cyber-high { color: #FF8C00; }
+  .text-cyber-medium { color: #FFD700; }
+  .text-cyber-low { color: #00FF88; }
+  .text-cyber-blue { color: #00BFFF; }
+
+  .bg-cyber-bg { background-color: #0A0E1A; }
+  .bg-cyber-card { background-color: #0F1629; }
+  .bg-cyber-green { background-color: #00FF88; }
+  .bg-cyber-critical { background-color: #FF4444; }
+
+  .border-cyber-border { border-color: #1E2D4D; }
+  .border-cyber-green { border-color: #00FF88; }
+  .border-cyber-critical { border-color: #FF4444; }
+
+  .shadow-cyber { box-shadow: 0 0 20px rgba(0, 255, 136, 0.15); }
+  .shadow-cyber-strong { box-shadow: 0 0 40px rgba(0, 255, 136, 0.3); }
+}

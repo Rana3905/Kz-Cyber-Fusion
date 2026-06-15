@@ -1,0 +1,50 @@
+{
+  "phishing": {
+    "weight": 0.25,
+    "label": "AI Phishing Shield",
+    "description": "Detects phishing SMS, emails, malicious URLs, and brand impersonation. Highest weight because phishing is the most common entry point in KZ financial fraud chains.",
+    "max_score": 100
+  },
+  "leak": {
+    "weight": 0.20,
+    "label": "Leak Sentinel",
+    "description": "Checks emails, phones, and usernames against known breach databases. High weight because credential exposure dramatically increases attack success probability.",
+    "max_score": 100
+  },
+  "anomaly": {
+    "weight": 0.20,
+    "label": "Behavioral Anomaly Engine",
+    "description": "Detects impossible travel, new device logins, suspicious IP addresses, and abnormal login times. Equal weight to leak — unauthorized access is a direct fraud signal.",
+    "max_score": 100
+  },
+  "deepfake": {
+    "weight": 0.15,
+    "label": "Deepfake Guard",
+    "description": "Detects synthetic voice and video used to impersonate bank officers or government officials. Weighted lower because deepfake calls typically follow phishing — a corroborating signal.",
+    "max_score": 100
+  },
+  "network": {
+    "weight": 0.10,
+    "label": "Network Threat Monitor",
+    "description": "Identifies C2-like outbound traffic, botnet beaconing, suspicious ports, and Tor exit node communication. Infrastructure-level signal — strong when correlated with identity signals.",
+    "max_score": 100
+  },
+  "logs": {
+    "weight": 0.10,
+    "label": "Log Intelligence Engine",
+    "description": "Analyzes authentication logs for brute-force bursts, privilege escalation, and account takeover patterns. Corroborating signal — rarely the first indicator, but confirms active attack.",
+    "max_score": 100
+  },
+  "_meta": {
+    "total_weight": 1.00,
+    "formula": "risk_score = (phishing * 0.25) + (leak * 0.20) + (anomaly * 0.20) + (deepfake * 0.15) + (network * 0.10) + (logs * 0.10) + correlation_boost",
+    "correlation_boost_rules": {
+      "6_detectors_active": 5,
+      "5_detectors_active": 5,
+      "4_detectors_active": 3,
+      "3_detectors_active": 2,
+      "below_3": 0
+    },
+    "score_threshold_for_active": 50
+  }
+}

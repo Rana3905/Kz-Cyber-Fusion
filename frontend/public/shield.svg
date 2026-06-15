@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <path d="M50 5 L90 20 L90 55 C90 75 70 90 50 95 C30 90 10 75 10 55 L10 20 Z" fill="#0F1629" stroke="#00FF88" stroke-width="3"/>
+  <path d="M50 20 L75 30 L75 55 C75 68 63 78 50 82 C37 78 25 68 25 55 L25 30 Z" fill="#00FF88" opacity="0.15"/>
+  <text x="50" y="65" text-anchor="middle" font-family="monospace" font-size="28" font-weight="bold" fill="#00FF88">KZ</text>
+</svg>

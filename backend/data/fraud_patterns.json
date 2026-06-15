@@ -1,0 +1,27 @@
+{
+  "coordinated_fraud_chains": [
+    {
+      "name": "SMS Blaster Financial Fraud",
+      "steps": ["phishing_sms", "credential_leak", "suspicious_login", "deepfake_call", "account_takeover"],
+      "min_signals": 3,
+      "base_risk_boost": 15
+    },
+    {
+      "name": "Account Takeover",
+      "steps": ["credential_leak", "suspicious_login", "failed_login_burst"],
+      "min_signals": 2,
+      "base_risk_boost": 10
+    },
+    {
+      "name": "Deepfake Social Engineering",
+      "steps": ["deepfake_call", "phishing_sms", "suspicious_login"],
+      "min_signals": 2,
+      "base_risk_boost": 12
+    }
+  ],
+  "c2_ports": [4444, 8080, 8443, 1080, 6667, 31337, 9001, 9030],
+  "beaconing_intervals_seconds": [60, 120, 300, 600],
+  "suspicious_outbound_countries": ["RU", "CN", "NG"],
+  "failed_login_burst_threshold": 10,
+  "impossible_travel_hours": 2
+}

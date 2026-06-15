@@ -1,0 +1,34 @@
+{
+  "Low": {
+    "min": 0,
+    "max": 39,
+    "color": "#00FF88",
+    "label": "Low",
+    "description": "Minimal risk. No immediate action required. Monitor for further signals.",
+    "response_sla_minutes": 1440
+  },
+  "Medium": {
+    "min": 40,
+    "max": 59,
+    "color": "#FFD700",
+    "label": "Medium",
+    "description": "Moderate risk. Analyst review recommended within 4 hours.",
+    "response_sla_minutes": 240
+  },
+  "High": {
+    "min": 60,
+    "max": 79,
+    "color": "#FF8C00",
+    "label": "High",
+    "description": "Elevated risk. Analyst must review and act within 1 hour.",
+    "response_sla_minutes": 60
+  },
+  "Critical": {
+    "min": 80,
+    "max": 100,
+    "color": "#FF4444",
+    "label": "Critical",
+    "description": "Confirmed or near-confirmed coordinated attack. Immediate action required. Escalate to AFM.",
+    "response_sla_minutes": 15
+  }
+}

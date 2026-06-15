@@ -1,0 +1,73 @@
+version: "3.9"
+
+# ─────────────────────────────────────────────
+# KZ Cyber Fusion — Docker Compose
+# AFM AI Hackathon 2026 | Track 2: AI Shield
+# ─────────────────────────────────────────────
+# Usage:
+#   docker-compose up --build
+#   Backend → http://localhost:8000
+#   Frontend → http://localhost:5173
+#   API docs → http://localhost:8000/docs
+
+networks:
+  kzcf_network:
+    driver: bridge
+
+services:
+
+  # ── Backend: FastAPI ──────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: kzcf_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - kzcf_db:/app/data
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - DEBUG=${DEBUG:-true}
+      - DATABASE_URL=${DATABASE_URL:-sqlite:///./kzcyberfusion.db}
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:5173}
+      - WEIGHT_PHISHING=${WEIGHT_PHISHING:-0.25}
+      - WEIGHT_LEAK=${WEIGHT_LEAK:-0.20}
+      - WEIGHT_ANOMALY=${WEIGHT_ANOMALY:-0.20}
+      - WEIGHT_DEEPFAKE=${WEIGHT_DEEPFAKE:-0.15}
+      - WEIGHT_NETWORK=${WEIGHT_NETWORK:-0.10}
+      - WEIGHT_LOGS=${WEIGHT_LOGS:-0.10}
+    networks:
+      - kzcf_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ── Frontend: Vite + React ────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: kzcf_frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:8000}
+    networks:
+      - kzcf_network
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  kzcf_db:
+    driver: local

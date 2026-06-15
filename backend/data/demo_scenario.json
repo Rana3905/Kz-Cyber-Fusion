@@ -1,0 +1,218 @@
+{
+  "scenario_id": "KZ-SMS-BLASTER-001",
+  "name": "Kazakhstan SMS Blaster Financial Fraud",
+  "description": "Full coordinated fraud attack chain: fake Kaspi SMS → phishing → credential leak → suspicious login → deepfake bank call → C2 network traffic → log anomaly",
+  "affected_entity": {
+    "email": "victim@example.kz",
+    "phone": "+77001234567",
+    "ip": "185.220.101.45",
+    "device": "Unknown Android Device (IMEI: 3592XXXX)"
+  },
+  "steps": [
+    {
+      "step": 1,
+      "detector": "phishing",
+      "label": "Fake Kaspi Bonus SMS Detected",
+      "delay_ms": 800,
+      "input": {
+        "message": "Kaspi Bank: Вы выиграли 50,000 тенге! Срочно перейдите по ссылке для получения бонуса: http://kaspi-bonus.ru/claim?id=77001234567",
+        "url": "http://kaspi-bonus.ru/claim?id=77001234567",
+        "sender": "+77089999999",
+        "channel": "sms"
+      },
+      "expected_result": {
+        "score": 95,
+        "confidence": 0.97,
+        "severity": "Critical",
+        "reasons": [
+          "Message contains urgency language: 'Срочно'",
+          "Fake bank bonus offer detected: 'выиграли 50,000 тенге'",
+          "Kaspi Bank brand impersonation detected",
+          "Suspicious URL domain: kaspi-bonus.ru",
+          "URL contains claim keyword with user identifier",
+          "Suspicious TLD: .ru used instead of .kz"
+        ],
+        "triggered_rules": [
+          "RULE_URGENCY_LANGUAGE",
+          "RULE_FAKE_BONUS_OFFER",
+          "RULE_BANK_IMPERSONATION",
+          "RULE_SUSPICIOUS_URL",
+          "RULE_SUSPICIOUS_TLD"
+        ]
+      }
+    },
+    {
+      "step": 2,
+      "detector": "leak",
+      "label": "Credentials Found in Zaimer-Style Breach",
+      "delay_ms": 600,
+      "input": {
+        "email": "victim@example.kz",
+        "phone": "+77001234567"
+      },
+      "expected_result": {
+        "score": 88,
+        "confidence": 0.92,
+        "severity": "Critical",
+        "reasons": [
+          "Email found in Zaimer.kz breach (2023)",
+          "Phone number found in KZ telecom leak (2022)",
+          "2 breach sources matched for this identity"
+        ],
+        "triggered_rules": [
+          "RULE_EMAIL_IN_BREACH",
+          "RULE_PHONE_IN_BREACH",
+          "RULE_MULTIPLE_BREACH_SOURCES"
+        ]
+      }
+    },
+    {
+      "step": 3,
+      "detector": "anomaly",
+      "label": "Suspicious Login from Russia After Phishing",
+      "delay_ms": 700,
+      "input": {
+        "email": "victim@example.kz",
+        "ip_address": "185.220.101.45",
+        "country": "RU",
+        "previous_country": "KZ",
+        "device_id": "unknown-android-xyz",
+        "login_time": "2024-06-15T03:14:00Z"
+      },
+      "expected_result": {
+        "score": 91,
+        "confidence": 0.94,
+        "severity": "Critical",
+        "reasons": [
+          "Login from Russia — unusual for KZ-based user",
+          "IP 185.220.101.45 is a known Tor exit node",
+          "Login at 03:14 AM — abnormal login time",
+          "New unrecognized device used",
+          "Impossible travel: KZ → RU in less than 2 hours"
+        ],
+        "triggered_rules": [
+          "RULE_SUSPICIOUS_COUNTRY",
+          "RULE_KNOWN_BAD_IP",
+          "RULE_ABNORMAL_LOGIN_TIME",
+          "RULE_NEW_DEVICE",
+          "RULE_IMPOSSIBLE_TRAVEL"
+        ]
+      }
+    },
+    {
+      "step": 4,
+      "detector": "deepfake",
+      "label": "Deepfake Bank Officer Voice Call Detected",
+      "delay_ms": 900,
+      "input": {
+        "call_id": "CALL-20240615-001",
+        "media_type": "voice",
+        "voice_inconsistency_score": 0.89,
+        "claimed_identity": "Kaspi Bank Security Officer",
+        "duration_seconds": 187
+      },
+      "expected_result": {
+        "score": 87,
+        "confidence": 0.91,
+        "severity": "Critical",
+        "reasons": [
+          "High voice inconsistency score: 0.89",
+          "Claimed identity is a bank official — common deepfake target",
+          "Voice pitch irregularities detected",
+          "Unnatural speech cadence pattern detected"
+        ],
+        "triggered_rules": [
+          "RULE_HIGH_VOICE_INCONSISTENCY",
+          "RULE_BANK_OFFICIAL_CLAIMED_IDENTITY",
+          "RULE_SYNTHETIC_VOICE_PATTERN"
+        ]
+      }
+    },
+    {
+      "step": 5,
+      "detector": "network",
+      "label": "C2-Like Outbound Traffic Detected",
+      "delay_ms": 500,
+      "input": {
+        "source_ip": "192.168.1.45",
+        "destination_ip": "185.220.101.45",
+        "destination_port": 4444,
+        "protocol": "TCP",
+        "bytes_transferred": 14520,
+        "connection_frequency": 12,
+        "country": "RU"
+      },
+      "expected_result": {
+        "score": 80,
+        "confidence": 0.87,
+        "severity": "Critical",
+        "reasons": [
+          "Outbound traffic to known bad IP: 185.220.101.45",
+          "Destination port 4444 is a known C2 port",
+          "Suspicious outbound country: RU",
+          "High connection frequency suggests beaconing"
+        ],
+        "triggered_rules": [
+          "RULE_KNOWN_BAD_IP_DESTINATION",
+          "RULE_C2_PORT",
+          "RULE_SUSPICIOUS_OUTBOUND_COUNTRY",
+          "RULE_BEACONING_PATTERN"
+        ]
+      }
+    },
+    {
+      "step": 6,
+      "detector": "logs",
+      "label": "47 Failed Login Attempts in 3 Minutes",
+      "delay_ms": 400,
+      "input": {
+        "user_id": "victim@example.kz",
+        "failed_logins": 47,
+        "time_window_seconds": 180,
+        "privilege_escalation_attempts": 2,
+        "source_ip": "185.220.101.45"
+      },
+      "expected_result": {
+        "score": 82,
+        "confidence": 0.89,
+        "severity": "Critical",
+        "reasons": [
+          "47 failed login attempts in 3 minutes — brute force pattern",
+          "Login attempts sourced from known bad IP: 185.220.101.45",
+          "2 privilege escalation attempts detected",
+          "Account takeover pattern matches known attack signature"
+        ],
+        "triggered_rules": [
+          "RULE_FAILED_LOGIN_BURST",
+          "RULE_BRUTE_FORCE_PATTERN",
+          "RULE_PRIVILEGE_ESCALATION",
+          "RULE_KNOWN_BAD_IP_SOURCE"
+        ]
+      }
+    },
+    {
+      "step": 7,
+      "detector": "fusion",
+      "label": "Cyber Fusion: Critical Financial Fraud Incident Generated",
+      "delay_ms": 1200,
+      "expected_result": {
+        "id": "KCF-001",
+        "title": "Coordinated Financial Fraud Attack — SMS Blaster Chain",
+        "risk_score": 97,
+        "severity": "Critical",
+        "confidence": 0.95,
+        "status": "open",
+        "explanation": "A coordinated financial fraud attack was detected targeting victim@example.kz. The attack followed the Kazakhstan SMS Blaster pattern: the victim received a fake Kaspi Bank bonus SMS with a phishing URL, their credentials were found in two breach databases, an attacker logged in from a known Tor exit node in Russia immediately after the phishing attempt, a deepfake voice call impersonating a Kaspi Bank security officer was detected, C2-like outbound traffic was observed on port 4444, and 47 failed login attempts in 3 minutes confirmed a brute-force attack. All six detection signals converge on the same victim identity, IP address, and time window, confirming a coordinated attack chain.",
+        "recommended_actions": [
+          "BLOCK IP 185.220.101.45 immediately",
+          "FREEZE account for victim@example.kz",
+          "FORCE password reset for victim@example.kz",
+          "FLAG all recent transactions for review",
+          "NOTIFY AFM fraud analyst on duty",
+          "CREATE investigation ticket with evidence package",
+          "ESCALATE to AFM Financial Intelligence Unit"
+        ]
+      }
+    }
+  ]
+}
